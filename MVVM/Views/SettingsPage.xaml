@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MVVM.Views.SettingsPage"
+             xmlns:font="clr-namespace:FontAwesome"
+             xmlns:vm="clr-namespace:MVVM.ViewModels"
+             BackgroundColor="{AppThemeBinding 
+                Dark={StaticResource BackgroundColorDark}, 
+                Light={StaticResource BackgroundColorLight}}"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+            <ControlTemplate x:Key="RadioButtonTemplate">
+                <Frame 
+                    BorderColor="#F3F2F1"
+                    BackgroundColor="#F3F2F1"
+                    HasShadow="True"
+                    HeightRequest="100"
+                    WidthRequest="100"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Padding="0">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="BorderColor"
+                                            Value="#FF3300" />
+                                        <Setter TargetName="check"
+                                            Property="Opacity"
+                                            Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                            Value="#F3F2F1" />
+                                        <Setter Property="BorderColor"
+                                            Value="#F3F2F1" />
+                                        <Setter TargetName="check"
+                                            Property="Opacity"
+                                            Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                    <Grid Margin="4"
+                      WidthRequest="100">
+                        <Grid WidthRequest="18"
+                          HeightRequest="18"
+                          HorizontalOptions="End"
+                          VerticalOptions="Start">
+                            <Ellipse Stroke="Blue"
+                                 Fill="White"
+                                 WidthRequest="16"
+                                 HeightRequest="16"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center" />
+                            <Ellipse x:Name="check"
+                                 Fill="Blue"
+                                 WidthRequest="8"
+                                 HeightRequest="8"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center" />
+                        </Grid>
+                        <ContentPresenter />
+                    </Grid>
+                </Frame>
+            </ControlTemplate>
+
+            <Style TargetType="RadioButton">
+                <Setter Property="ControlTemplate"
+                    Value="{StaticResource RadioButtonTemplate}" />
+            </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+            <StackLayout HorizontalOptions="Center">
+                <Frame>
+                <Grid
+                    RadioButtonGroup.GroupName="ThemeGroup">
+                    <RadioButton
+                Grid.Column="0"
+                x:Name="RadioButtonSystem"
+                CheckedChanged="RadioButton_CheckedChanged"
+                Value="System">
+                        <RadioButton.Content>
+                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image
+                            Scale="0.75"
+                            Source="{FontImage FontFamily=FASolid, Glyph={x:Static font:FontAwesomeIcons.Cog}}" />
+                                <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Text="System"/>
+                            </StackLayout>
+                        </RadioButton.Content>
+                    </RadioButton>
+                    <RadioButton
+                Grid.Column="1"
+                x:Name="RadioButtonLight"
+                CheckedChanged="RadioButton_CheckedChanged"
+                Value="Light">
+                        <RadioButton.Content>
+                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image
+                            Scale="0.75"
+                            Source="{FontImage FontFamily=FASolid, Glyph={x:Static font:FontAwesomeIcons.Cog}}" />
+                                <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Text="Light"/>
+                            </StackLayout>
+                        </RadioButton.Content>
+                    </RadioButton>
+                    <RadioButton
+                Grid.Column="2"
+                x:Name="RadioButtonDark"
+                CheckedChanged="RadioButton_CheckedChanged"
+                Value="Dark">
+                        <RadioButton.Content>
+                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image
+                            Scale="0.75"
+                            Source="{FontImage FontFamily=FASolid, Glyph={x:Static font:FontAwesomeIcons.Cog}}" />
+                                <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Text="Dark"/>
+                            </StackLayout>
+                        </RadioButton.Content>
+                    </RadioButton>
+                </Grid>
+            </Frame>
+            </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
