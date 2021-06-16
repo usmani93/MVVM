@@ -55,6 +55,9 @@
                         Command="{Binding OpenWebCommand}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
+                <Button Text="Check Internet"
+                        Command="{Binding CheckInternet}" />
+                <Label Text="{Binding InternetStatus}" />
             </StackLayout>
         </ScrollView>
     </Grid>
