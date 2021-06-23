@@ -1,4 +1,5 @@
 ﻿using MVVM.Models;
+using MVVM.Services;
 using MVVM.Views;
 using System;
 using System.Collections.ObjectModel;
@@ -10,12 +11,28 @@ namespace MVVM.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
+        #region Properties 
+
         private Item _selectedItem;
 
         public ObservableCollection<Item> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<Item> ItemTapped { get; }
+
+        public Item SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                OnItemSelected(value);
+            }
+        }
+
+        #endregion
+
+        #region Properties
 
         public ItemsViewModel()
         {
@@ -30,42 +47,39 @@ namespace MVVM.ViewModels
 
         async Task ExecuteLoadItemsCommand()
         {
-            //IsBusy = true;
+            IsBusy = true;
 
-            //try
-            //{
-            //    Items.Clear();
-            //    var items = await DataStore.GetItemsAsync(true);
-            //    foreach (var item in items)
-            //    {
-            //        Items.Add(item);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine(ex);
-            //}
-            //finally
-            //{
-            //    IsBusy = false;
-            //}
+            try
+            {
+                Items.Clear();
+                var items = await ItemsService.GetItems();
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                }
+                else
+                {
+                    //no item found
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         public void OnAppearing()
         {
             IsBusy = true;
             SelectedItem = null;
-        }
-
-        public Item SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
-            }
-        }
+        }        
 
         private async void OnAddItem(object obj)
         {
@@ -77,8 +91,9 @@ namespace MVVM.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
+
+        #endregion
     }
 }

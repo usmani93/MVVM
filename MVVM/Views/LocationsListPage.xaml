@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:MVVM.ViewModels" 
+             xmlns:models="clr-namespace:MVVM.Models"
+             x:DataType="viewmodels:LocationsListViewModel"
+             x:Class="MVVM.Views.LocationsListPage">
+    <ContentPage.BindingContext>
+        <viewmodels:LocationsListViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView
+                ItemsSource="{Binding ListOfLocations}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Locations">
+                        <ViewCell>
+                        <StackLayout>
+                            <Label
+                                Text="{Binding Name}" />
+                            <Label
+                                Text="{Binding Location}" />
+                        </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

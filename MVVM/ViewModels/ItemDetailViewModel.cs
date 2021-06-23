@@ -1,4 +1,5 @@
 ﻿using MVVM.Models;
+using MVVM.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace MVVM.ViewModels
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
+        #region Properties 
+
         private string itemId;
         private string text;
         private string description;
@@ -39,19 +42,32 @@ namespace MVVM.ViewModels
             }
         }
 
+        #endregion
+
+        #region Methods
+
         public async void LoadItemId(string itemId)
         {
-            //try
-            //{
-            //    var item = await DataStore.GetItemAsync(itemId);
-            //    Id = item.Id;
-            //    Text = item.Text;
-            //    Description = item.Description;
-            //}
-            //catch (Exception)
-            //{
-            //    Debug.WriteLine("Failed to Load Item");
-            //}
+            try
+            {
+                var item = await ItemsService.GetItemById(itemId).Result;
+                if (item != null)
+                {
+                    Id = item.Id.ToString();
+                    Text = item.Text;
+                    Description = item.Description;
+                }
+                else
+                {
+                    //no item found
+                }
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Failed to Load Item");
+            }
         }
+
+        #endregion
     }
 }

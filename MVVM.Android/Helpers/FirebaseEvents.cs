@@ -17,13 +17,19 @@ namespace MVVM.Droid.Helpers
 {
     public class FirebaseEvents : IFirebaseEvents
     {
+        public void CrashlyticsLogEvent(Exception exception)
+        {
+            var crashlytics = Firebase.Crashlytics.FirebaseCrashlytics.Instance;
+            crashlytics.Log(exception.Message);
+        }
+
         public void LogEvent(string eventName, string actionName)
         {
-            var analytic = FirebaseAnalytics.GetInstance(MainActivity.Context);
+            var analytics = FirebaseAnalytics.GetInstance(MainActivity.Context);
             var bundle = new Bundle();
             bundle.PutString(eventName, actionName);
 
-            analytic.LogEvent("Event", bundle);
+            analytics.LogEvent("Event", bundle);
         }
     }
 }

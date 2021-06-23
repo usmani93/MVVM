@@ -58,6 +58,8 @@
                 <Button Text="Check Internet"
                         Command="{Binding CheckInternet}" />
                 <Label Text="{Binding InternetStatus}" />
+                <Button Text="Check Crashlytics"
+                        Command="{Binding CheckCrashlytics}" />
             </StackLayout>
         </ScrollView>
     </Grid>
