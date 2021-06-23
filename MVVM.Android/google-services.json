@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "812456236852",
+    "project_id": "fcmxam-d3a86",
+    "storage_bucket": "fcmxam-d3a86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812456236852:android:ad99077c7567d069ad7761",
+        "android_client_info": {
+          "package_name": "com.xamarin.mvvm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812456236852-c695cqef1cj627oilvtcu8vd1r3ndcnh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcH4VH0FXkxUXbg3UoXb1tDplKOthRxl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812456236852-c695cqef1cj627oilvtcu8vd1r3ndcnh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

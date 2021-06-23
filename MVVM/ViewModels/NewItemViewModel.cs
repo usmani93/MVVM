@@ -1,4 +1,5 @@
 ﻿using MVVM.Models;
+using MVVM.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,8 @@ namespace MVVM.ViewModels
 {
     public class NewItemViewModel : BaseViewModel
     {
+        #region Properties
+
         private string text;
         private string description;
 
@@ -16,8 +19,7 @@ namespace MVVM.ViewModels
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
-            this.PropertyChanged +=
-                (_, __) => SaveCommand.ChangeCanExecute();
+            this.PropertyChanged += (_, __) => SaveCommand.ChangeCanExecute();
         }
 
         private bool ValidateSave()
@@ -41,6 +43,10 @@ namespace MVVM.ViewModels
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
 
+        #endregion
+
+        #region Methods
+
         private async void OnCancel()
         {
             // This will pop the current page off the navigation stack
@@ -51,15 +57,16 @@ namespace MVVM.ViewModels
         {
             Item newItem = new Item()
             {
-                Id = Guid.NewGuid().ToString(),
                 Text = Text,
                 Description = Description
             };
 
-            await DataStore.AddItemAsync(newItem);
+            await ItemsService.AddItem(newItem);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
+
+        #endregion
     }
 }

@@ -6,6 +6,11 @@ namespace MVVM.Helpers
 {
     public static class SetAppTheme
     {
+        #region Properties
+        #endregion
+
+        #region Methods
+
         public static void SetTheme()
         {
             switch(Settings.Theme)
@@ -21,5 +26,7 @@ namespace MVVM.Helpers
                     break;
             }
         }
+
+        #endregion
     }
 }
