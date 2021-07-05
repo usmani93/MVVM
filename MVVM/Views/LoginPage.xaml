@@ -2,13 +2,39 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="clr-namespace:MVVM.Converters"
              mc:Ignorable="d"
              x:Class="MVVM.Views.LoginPage"
              Shell.NavBarIsVisible="False">
+    <ContentPage.Resources>
+        <converters:BoolConverter x:Key="BooleanConverter" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+
+            <Editor
+                Placeholder="Enter Name"
+                Text="{Binding Name}" />
+
+            <StackLayout IsVisible="{Binding IsBusy}">
+                <ActivityIndicator 
+                    Color="Blue"
+                    IsVisible="{Binding IsBusy}"
+                    IsEnabled="{Binding IsBusy}"
+                    IsRunning="{Binding IsBusy}" />
+            </StackLayout>
+            <StackLayout IsVisible="{Binding IsBusy, Converter={StaticResource BooleanConverter}}">
+            <Button 
+                VerticalOptions="Center" 
+                Text="Login as User" 
+                Command="{Binding LoginCommand}" 
+                CommandParameter="User"/>
+            <Button 
+                VerticalOptions="Center" 
+                Text="Login as Guest" 
+                Command="{Binding LoginCommand}" 
+                CommandParameter="Guest"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

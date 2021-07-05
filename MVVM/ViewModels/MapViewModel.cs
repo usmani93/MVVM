@@ -33,7 +33,7 @@ namespace MVVM.ViewModels
         {
             try
             {
-                var route = $"{nameof(LocationsListPage)}";
+                var route = $"{nameof(LocationsListPage)}?Address={Address}";
                 await Shell.Current.GoToAsync(route);
             }
             catch(Exception e)

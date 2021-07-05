@@ -1,4 +1,5 @@
 ﻿using MVVM.Helpers;
+using MVVM.Views;
 using Plugin.FirebasePushNotification;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -12,8 +13,17 @@ namespace MVVM
         public App()
         {
             InitializeComponent();
-            
-            MainPage = new AppShell();
+
+            var userStatus = (SecureStorage.GetAsync("UserLoggedIn").Result);
+            if (userStatus == "1")
+            {
+                MainPage = new LoginPage();
+                //MainPage = new AppShell();
+            }
+            else
+            {
+                MainPage = new LoginPage();
+            }
 
             // Token event
             CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>

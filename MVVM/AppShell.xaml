@@ -79,11 +79,17 @@
         FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
         https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
     -->
+    <FlyoutItem Title="Browse Items" Icon="icon_feed.png">
+        <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
+    </FlyoutItem>
     <FlyoutItem Title="About" Icon="icon_about.png">
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Browse Items" Icon="icon_feed.png">
-        <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
+    <FlyoutItem Title="Map">
+        <!--<FlyoutItem.Icon>
+            <FontImageSource FontFamily="FASolid" Glyph="{StaticResource Map}"/>
+        </FlyoutItem.Icon>-->
+        <ShellContent Route="MapPage" ContentTemplate="{DataTemplate local:MapPage}" />
     </FlyoutItem>
     <FlyoutItem Title="Settings">
         <FlyoutItem.Icon>
@@ -91,11 +97,11 @@
         </FlyoutItem.Icon>
         <ShellContent Route="SettingsPage" ContentTemplate="{DataTemplate local:SettingsPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Map">
-        <!--<FlyoutItem.Icon>
-            <FontImageSource FontFamily="FASolid" Glyph="{StaticResource Map}"/>
-        </FlyoutItem.Icon>-->
-        <ShellContent Route="MapPage" ContentTemplate="{DataTemplate local:MapPage}" />
+    <FlyoutItem Title="Chat" FlyoutItemIsVisible="False">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="FASolid" Glyph="{StaticResource Cog}"/>
+        </FlyoutItem.Icon>
+        <ShellContent Route="ChatPage" ContentTemplate="{DataTemplate local:ChatPage}" />
     </FlyoutItem>
 
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->

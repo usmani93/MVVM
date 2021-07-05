@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace MVVM.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : ContentPage, INotifyPropertyChanged
     {
         bool isBusy = false;
         public bool IsBusy
@@ -36,6 +36,7 @@ namespace MVVM.ViewModels
         }
 
         #region INotifyPropertyChanged
+        
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {

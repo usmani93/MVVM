@@ -5,7 +5,10 @@
 		  package="com.xamarin.mvvm" 
 		  android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
-	<application android:label="MVVM.Android" android:theme="@style/MainTheme">
+	<application 
+		android:label="MVVM.Android" 
+		android:theme="@style/MainTheme"
+		android:usesCleartextTraffic="true">
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCIaG_zSOlwALlLJPhU6J_LrbPQD4Hfx6s" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

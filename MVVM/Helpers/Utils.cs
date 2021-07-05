@@ -1,4 +1,5 @@
 ﻿using MVVM.Interfaces;
+using MVVM.Models;
 using Plugin.FirebasePushNotification;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,21 @@ namespace MVVM.Helpers
 {
     public static class Utils
     {
+        #region Enums
+
+        public enum Connected
+        {
+            Connected,
+            Disconnected
+        }
+
+
+        #endregion
+
         #region Properties
 
         private static string firebaseToken { get; set; }
+        public static List<string> UsersList { get; set; }
 
         #endregion
 
