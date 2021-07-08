@@ -9,10 +9,16 @@ using Xamarin.Forms;
 
 namespace MVVM.ViewModels
 {
-    [QueryProperty(nameof(Name), nameof(Name))]
     public class ChatViewModel : BaseViewModel
     {
         #region Properties
+
+        private Request request;
+        public Request UserRequest
+        {
+            get => request;
+            set => SetProperty(ref request, value);
+        }
 
         private string connectionId;
         public string ConnectionId
@@ -35,38 +41,15 @@ namespace MVVM.ViewModels
             set => SetProperty(ref message, value);
         }
 
-        private bool isEnabledToSend;
-        public bool IsEnabledToSend
-        {
-            get => isEnabledToSend;
-            set => SetProperty(ref isEnabledToSend, value);
-        }
-
         private ObservableCollection<Request> messages;
         public ObservableCollection<Request> Messages
         {
             get => messages;
             set => SetProperty(ref messages, value);
-        }
-
-        private List<string> usersList;
-        public List<string> UsersList
-        {
-            get => usersList;
-            set => SetProperty(ref usersList, value);
-        }
-
-        private string selectedUser;
-        public string SelectedUser
-        {
-            get => selectedUser;
-            set => SetProperty(ref selectedUser, value);
-        }
+        }        
 
         public Command SendCommand { get; }
-        public Command OnUserSelected { get; }
-
-        HttpClientService httpService;
+        public Command GoBackCommand { get; }
 
         #endregion
 
@@ -74,56 +57,27 @@ namespace MVVM.ViewModels
 
         public ChatViewModel()
         {
+            UserRequest = Utils.Request;
+            Name = UserRequest.UserName;
+            ConnectionId = UserRequest.ConnectionId;
             SendCommand = new Command(OnSendMessageClick);
-            OnUserSelected = new Command(OnUserSelectedClick);
-            Init();
-        }
-
-        public async void Init()
-        {
-            isEnabledToSend = false;
-            UsersList = new List<string>();
+            GoBackCommand = new Command(OnGoBackCommandClick);
             Messages = new ObservableCollection<Request>();
-            httpService = new HttpClientService();
-            httpService.InitChatService();
-            UsersList = await httpService.GetUsersListAsync();
             MessagingCenter.Subscribe<string>(this, "ReceiveMessage", (sender) =>
             {
                 OnMessageReceived(sender);
             });
-            MessagingCenter.Subscribe<object>(this, "UserConnected", (sender) =>
-            {
-                UpdateUserStatus((Utils.Connected)sender);
-            });
         }
 
-        private void UpdateUserStatus(Utils.Connected status)
+        private void OnGoBackCommandClick(object obj)
         {
-            switch(status)
-            {
-                case Utils.Connected.Connected:
-                    UsersList = Utils.UsersList;
-                    break;
-
-                case Utils.Connected.Disconnected:
-                    httpService.Disconnect();
-                    break;
-
-                default:
-                    break;
-            }
+            Shell.Current.GoToAsync("..");
         }
 
         private async void OnSendMessageClick(object obj)
         {
-            await httpService.SendMessageToUser(ConnectionId, Name, Message);
+            await HttpClientService.SendMessageToUser(ConnectionId, Name, Message);
             Message = "";
-        }
-
-        private void OnUserSelectedClick(object obj)
-        {
-            ConnectionId = SelectedUser;
-            IsEnabledToSend = true;
         }
 
         public void OnMessageReceived(string request)
@@ -135,7 +89,7 @@ namespace MVVM.ViewModels
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            httpService.Disconnect();
+            HttpClientService.Disconnect();
         }
 
         #endregion

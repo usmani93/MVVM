@@ -1,6 +1,8 @@
 ﻿using ChatAPI.Hubs;
 using ChatAPI.Interfaces;
 using ChatAPI.Model;
+using ChatAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -34,7 +36,7 @@ namespace ChatAPI.Controllers
 
         [Route("getUsers")]
         [HttpGet]
-        public List<string> GetUsers()
+        public List<User> GetUsers()
         {
             return ChatHub.GetUsersList();
         }
@@ -47,19 +49,29 @@ namespace ChatAPI.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [Route("authenticate")]
         [HttpPost]
         public IActionResult Authenticate([FromBody] Request request)
         {
             var token = _authenticateUser.AuthenticateUserWithJWT(request.UserName);
+            request.Token = token;
             if(string.IsNullOrEmpty(token))
             {
                 return Unauthorized();
             }
             else
             {
-                return Ok(token);
+                return Ok(request);
             }
+        }
+
+        [Authorize]
+        [Route("validate")]
+        [HttpPost]
+        public IActionResult ValidateToken(string token)
+        {
+            return Ok(_authenticateUser.TokenValidator(token));
         }
 
     }

@@ -25,7 +25,8 @@ namespace MVVM.Helpers
         #region Properties
 
         private static string firebaseToken { get; set; }
-        public static List<string> UsersList { get; set; }
+        public static List<User> UsersList { get; set; }
+        public static Request Request { get; internal set; }
 
         #endregion
 

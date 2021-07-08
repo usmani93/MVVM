@@ -12,6 +12,7 @@ namespace MVVM.Helpers
         public static string URLForHUB = "http://localhost:5001/chatserver";
 
         public static string GetUsersId = "/api/chatserver/getusers";
-        public static string Authenticate = "api/chatserver/authenticate";
+        public static string Authenticate = "/api/chatserver/authenticate";
+        public static string Validate = "/api/chatserver/validate";
     }
 }

@@ -17,6 +17,7 @@ namespace MVVM
             Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
             Routing.RegisterRoute(nameof(LocationsListPage), typeof(LocationsListPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
+            Routing.RegisterRoute(nameof(UsersList), typeof(UsersList));
         }
 
         private async void OnMenuItemClicked(object sender, EventArgs e)

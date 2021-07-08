@@ -103,6 +103,12 @@
         </FlyoutItem.Icon>
         <ShellContent Route="ChatPage" ContentTemplate="{DataTemplate local:ChatPage}" />
     </FlyoutItem>
+    <FlyoutItem Title="UsersList" FlyoutItemIsVisible="False">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="FASolid" Glyph="{StaticResource Cog}"/>
+        </FlyoutItem.Icon>
+        <ShellContent Route="UsersList" ContentTemplate="{DataTemplate local:UsersList}" />
+    </FlyoutItem>
 
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
     <MenuItem Text="Logout" StyleClass="MenuItemLayoutStyle" Clicked="OnMenuItemClicked">

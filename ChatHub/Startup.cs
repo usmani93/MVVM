@@ -32,7 +32,7 @@ namespace ChatAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = "U$ern@meP@$$w0rD";
+            #region JWT
 
             services.AddAuthentication(x =>
             {
@@ -40,18 +40,22 @@ namespace ChatAPI
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidIssuer = Utils.ValidIssuer,
+                    ValidAudience = Utils.ValidAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Utils.key))
                 };
             });
 
-            services.AddSingleton<IAuthenticateUser>(new AuthenticateUser(key));
+            services.AddSingleton<IAuthenticateUser>(new AuthenticateUser(Utils.key));
+
+            #endregion
+
             services.AddControllers();
             services.AddSignalR();
             services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
@@ -60,10 +64,37 @@ namespace ChatAPI
                     .AllowAnyHeader()
                     .WithOrigins("http://localhost:5000");
             }));
+
+            #region Swagger
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChatHub", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Standard Authorization"
+                });
+                var securityScheme = new OpenApiSecurityScheme()
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                var securityRequirements = new OpenApiSecurityRequirement()
+                {
+                    { securityScheme, new string[] { } },
+                };
+                c.AddSecurityRequirement(securityRequirements);
             });
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

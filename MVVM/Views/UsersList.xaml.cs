@@ -11,15 +11,18 @@ using Xamarin.Forms.Xaml;
 namespace MVVM.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ChatPage : ContentPage
+    public partial class UsersList : ContentPage
     {
-        public ChatPage()
+        public UsersList()
         {
             InitializeComponent();
-            this.BindingContext = new ChatViewModel();
+            this.BindingContext = new UsersListViewModel();
         }
 
-        protected override bool OnBackButtonPressed() => false;
-
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            onlineUsersList.SelectedItem = null;
+        }
     }
 }

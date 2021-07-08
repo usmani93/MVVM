@@ -27,7 +27,7 @@ namespace ChatAPI.Helper
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.ASCII.GetBytes(key);
+            var tokenKey = Encoding.UTF8.GetBytes(key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -37,10 +37,36 @@ namespace ChatAPI.Helper
                 Expires = DateTime.UtcNow.AddMonths(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(tokenKey),
-                    SecurityAlgorithms.HmacSha256Signature)
+                    SecurityAlgorithms.HmacSha256Signature),
+                Audience = Utils.ValidAudience,
+                Issuer = Utils.ValidAudience
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public bool TokenValidator(string token)
+        {
+            try
+            {
+                var jwtTokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(Utils.key);
+                jwtTokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidAudience = Utils.ValidAudience,
+                    ValidIssuer = Utils.ValidIssuer,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateAudience = true,
+                    ValidateIssuer = true
+                }, out SecurityToken securityToken);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

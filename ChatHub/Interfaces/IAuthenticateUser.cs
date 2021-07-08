@@ -8,5 +8,6 @@ namespace ChatAPI.Interfaces
     public interface IAuthenticateUser
     {
         public string AuthenticateUserWithJWT(string userName);
+        public bool TokenValidator(string token);
     }
 }

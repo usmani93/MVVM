@@ -1,4 +1,6 @@
-﻿using MVVM.Services;
+﻿using MVVM.Helpers;
+using MVVM.Models;
+using MVVM.Services;
 using MVVM.Views;
 using System;
 using System.Collections.Generic;
@@ -45,7 +47,7 @@ namespace MVVM.ViewModels
                 {
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        await GetToken(Name);
+                        await GetAndVerifyToken(Name);
                         await SetMainPage();
                     }
                     else
@@ -56,7 +58,7 @@ namespace MVVM.ViewModels
                 else
                 {
                     Name = "Guest";
-                    await GetToken(Name);
+                    await GetAndVerifyToken(Name);
                     await SetMainPage();
                 }
             }
@@ -70,11 +72,23 @@ namespace MVVM.ViewModels
             }
         }
 
-        private async Task GetToken(string name)
+        private async Task GetAndVerifyToken(string name)
         {
-            var token = await httpClientService.UpdateAndSendTokenToHubAsync();
-            httpClientService.tok
-            await SecureStorage.SetAsync("token", token);
+            var savedToken = await SecureStorage.GetAsync("token");
+            if (string.IsNullOrEmpty(savedToken))
+            {
+                var token = await httpClientService.UpdateAndSendTokenToHubAsync(false, name);
+                await SecureStorage.SetAsync("token", token);
+            }
+            else
+            {
+                var token = await httpClientService.UpdateAndSendTokenToHubAsync(true, name, savedToken);
+                if(string.IsNullOrEmpty(token))
+                {
+                    token = await httpClientService.UpdateAndSendTokenToHubAsync(false, name);
+                }
+                await SecureStorage.SetAsync("token", token);
+            }
         }
 
         internal async Task NavigateToChat()
@@ -82,13 +96,17 @@ namespace MVVM.ViewModels
             var task1 = SecureStorage.SetAsync("UserLoggedIn", "1");
             var task2 = SetMainPage();
             await Task.WhenAll(task1, task2);
-            //var IsComplete = await task2; 
         }
 
         async Task SetMainPage()
-        { 
+        {
+            Request request = new Request
+            {
+                UserName = Name
+            };
+            Utils.Request = request;
             Application.Current.MainPage = new AppShell();
-            await Shell.Current.GoToAsync($"//{nameof(ChatPage)}?Name={Name}");
+            await Shell.Current.GoToAsync($"//{nameof(UsersList)}");
         }
 
         #endregion

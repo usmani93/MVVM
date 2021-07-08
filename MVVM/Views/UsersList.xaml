@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Online Users"
+             x:Class="MVVM.Views.UsersList">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView 
+                x:Name="onlineUsersList"
+                    Grid.Row="0"
+                    Margin="8,4,8,4"
+                    ItemsSource="{Binding UsersList}"
+                    SelectionMode="Single"
+                    SelectionChangedCommand="{Binding OnUserSelected}"
+                    SelectedItem="{Binding SelectedUser, Mode=TwoWay}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout
+                            ItemSpacing="10"
+                            Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label
+                                Text="No Users Online"
+                                VerticalOptions="CenterAndExpand"
+                                HorizontalOptions="CenterAndExpand" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            BackgroundColor="GhostWhite"
+                            BorderColor="Gray"
+                            WidthRequest="30"
+                            HeightRequest="20"
+                            CornerRadius="20"
+                            VerticalOptions="Start">
+                            <Label
+                                Text="{Binding userName}">
+                            </Label>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
