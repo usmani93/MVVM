@@ -1,6 +1,8 @@
+using ChatAPI.Data;
 using ChatAPI.Helper;
 using ChatAPI.Hubs;
 using ChatAPI.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace ChatAPI
 {
@@ -65,6 +68,9 @@ namespace ChatAPI
                     .WithOrigins("http://localhost:5000");
             }));
 
+            services.AddDbContext<ChatContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
+
             #region Swagger
 
             services.AddSwaggerGen(c =>
@@ -92,7 +98,9 @@ namespace ChatAPI
                     { securityScheme, new string[] { } },
                 };
                 c.AddSecurityRequirement(securityRequirements);
+                //c.DocumentFilter<JsonPatchRequest>();
             });
+            services.AddSwaggerExamplesFromAssemblyOf<JsonPatchRequestExample>();
 
             #endregion
         }

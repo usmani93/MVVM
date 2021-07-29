@@ -1,11 +1,16 @@
-﻿using ChatAPI.Hubs;
+﻿using ChatAPI.Data;
+using ChatAPI.Helper;
+using ChatAPI.Hubs;
 using ChatAPI.Interfaces;
 using ChatAPI.Model;
 using ChatAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +22,13 @@ namespace ChatAPI.Controllers
     [ApiController]
     public class ChatController : Controller
     {
+        private readonly ChatContext _chatContext;
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly IAuthenticateUser _authenticateUser;
 
-        public ChatController(IHubContext<ChatHub> hubContext, IAuthenticateUser authenticateUser)
+        public ChatController(ChatContext context, IHubContext<ChatHub> hubContext, IAuthenticateUser authenticateUser)
         {
+            _chatContext = context;
             _hubContext = hubContext;
             _authenticateUser = authenticateUser;
         }
@@ -56,7 +63,7 @@ namespace ChatAPI.Controllers
         {
             var token = _authenticateUser.AuthenticateUserWithJWT(request.UserName);
             request.Token = token;
-            if(string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
                 return Unauthorized();
             }
@@ -74,5 +81,50 @@ namespace ChatAPI.Controllers
             return Ok(_authenticateUser.TokenValidator(token));
         }
 
+        [Route("getUsersFromDB")]
+        [HttpPost]
+        public async IAsyncEnumerable<User> GetUsersFromDBAsync()
+        {
+            var id = await _chatContext.Users.ToListAsync();
+            foreach (var item in id)
+            {
+                yield return item;
+            }
+        }
+
+        [Route("addUser")]
+        [HttpPost]
+        public async Task<IActionResult> AddUser([FromBody] User user)
+        {
+            _chatContext.Users.Add(user);
+            await _chatContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Route("updateUser")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser([FromBody] User user)
+        {
+            var userToUpdate = await _chatContext.Users.FirstOrDefaultAsync(x => x.userID == user.userID);
+            if (userToUpdate == null)
+            {
+                return StatusCode(404);
+            }
+            try
+            {
+                userToUpdate.connectionId = user.connectionId;
+                userToUpdate.userName = user.userName;
+                userToUpdate.userToken = user.userToken;
+                //user.ApplyTo(userToUpdate);
+                _chatContext.Update(userToUpdate);
+                await _chatContext.SaveChangesAsync();
+                return Ok(userToUpdate);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+        }
     }
+
 }
